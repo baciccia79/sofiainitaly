@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slot Machine with Images</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+        }
+        .instructions {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+            line-height: 1.5;
+        }
+        .slot-machine {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 600px;
+            height: 200px;
+            border: 5px solid #000;
+            border-radius: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        .slot {
+            width: 33.33%;
+            text-align: center;
+            padding: 10px;
+        }
+        .slot img {
+            max-width: 80%;
+            height: auto;
+            border-radius: 10px;
+        }
+        button {
+            margin-top: 20px;
+            background-color: #ff4500;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 20px;
+            cursor: pointer;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        button:hover {
+            background-color: #ff6347;
+        }
+        .message {
+            margin-top: 20px;
+            font-size: 2.5rem; /* Increased size */
+            color: green;
+            font-weight: bold;
+            display: none;
+            animation: blink 1s infinite; /* Added blinking animation */
+        }
+        .christmas-message {
+            margin-top: 20px;
+            font-size: 9rem; /* Increased size to 3x */
+            color: red;
+            font-weight: bold;
+            display: none;
+        }
+        @keyframes blink {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Text above the slot -->
+    <div class="instructions">
+        Do not press STOP until you feel lucky. <br>
+        You can win a fantastic prize.
+    </div>
+
+    <div class="slot-machine">
+        <div class="slot" id="slot1">
+            <img src="img1.jpg" alt="Image 1">
+        </div>
+        <div class="slot" id="slot2">
+            <img src="img2.avif" alt="Image 2">
+        </div>
+        <div class="slot" id="slot3">
+            <img src="img4.avif" alt="Image 4">
+        </div>
+    </div>
+    <button id="stopBtn" onclick="stopSlot()">Stop</button>
+    <button id="retryBtn" onclick="retrySlot()" style="display: none;">Retry</button>
+    <div class="message" id="message">YOU WON A WONDERFUL SKI HOLIDAY IN ITALY!!</div>
+    <div class="christmas-message" id="christmasMessage">Veselé Vánoce</div>
+
+    <script>
+        let interval1, interval2, interval3;
+        const images = ['img1.jpg', 'img2.avif', 'img4.avif', 'img5.jpg', 'img6.jpg', 'img7.avif', 'img8.jpg']; // Includes img2.avif, img4.avif, img7.avif
+
+        function startSlot() {
+            // Start updating images with slower intervals
+            interval1 = setInterval(() => {
+                updateImage('slot1');
+            }, 500); // Change image every 500 ms
+
+            interval2 = setInterval(() => {
+                updateImage('slot2');
+            }, 500); // Change image every 500 ms
+
+            interval3 = setInterval(() => {
+                updateImage('slot3');
+            }, 500); // Change image every 500 ms
+        }
+
+        function updateImage(slotId) {
+            const imgElement = document.getElementById(slotId).querySelector('img');
+            const randomImage = images[Math.floor(Math.random() * images.length)];
+            imgElement.src = randomImage;
+        }
+
+        function stopSlot() {
+            // Stop all intervals
+            clearInterval(interval1);
+            clearInterval(interval2);
+            clearInterval(interval3);
+
+            // Always show img3.jpg on all reels
+            document.getElementById('slot1').querySelector('img').src = 'img3.jpg';
+            document.getElementById('slot2').querySelector('img').src = 'img3.jpg';
+            document.getElementById('slot3').querySelector('img').src = 'img3.jpg';
+
+            // Hide the "Stop" button and show the "Retry" button
+            document.getElementById('stopBtn').style.display = 'none';
+            document.getElementById('retryBtn').style.display = 'block';
+
+            // Show the winning message after 1 second
+            setTimeout(() => {
+                document.getElementById('message').style.display = 'block';
+
+                // Show "Veselé Vánoce" after 3 seconds
+                setTimeout(() => {
+                    document.getElementById('message').style.display = 'none'; // Hide the blinking message
+                    document.getElementById('christmasMessage').style.display = 'block';
+                }, 3000);
+            }, 1000);
+        }
+
+        function retrySlot() {
+            // Hide the messages and reset buttons
+            document.getElementById('message').style.display = 'none';
+            document.getElementById('christmasMessage').style.display = 'none';
+            document.getElementById('retryBtn').style.display = 'none';
+            document.getElementById('stopBtn').style.display = 'block';
+
+            // Restart the slot machine
+            startSlot();
+        }
+
+        // Start the slot machine
+        startSlot();
+    </script>
+</body>
+</html>
